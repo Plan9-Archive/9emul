@@ -29,7 +29,7 @@ struct symbol {
 typedef struct symbol symbol;
 
 struct vaddr_space {
-	void  *vspace;
+	void *   vspace;
 	uint64_t data;
 	uint64_t heap;
 	uint64_t stack;
@@ -40,11 +40,11 @@ int alloc_vaddrspace(vaddr_space *prog, Exec *header) {
 	int psize;
 	int text_pad;
 	
-	psize = getpagesize();
+	psize    = getpagesize();
 	text_pad = header->text % psize;
 
 	prog->vspace = calloc(1, header->text + text_pad + header->data + header->bss +
-							 header->syms + header->pcsz + THUNDERDOME + STACKSZ);
+				 header->syms + header->pcsz + THUNDERDOME + STACKSZ);
 
 	prog->data  = header->text + text_pad;
 	prog->heap  = prog->data + header->data + header->bss + header->bss + header->pcsz;
@@ -56,21 +56,21 @@ int alloc_vaddrspace(vaddr_space *prog, Exec *header) {
 }
 
 int main(int argc, char *argv[]) {
-	FILE*	    in;
-	Exec	    header;
+	FILE*       in;
+	Exec        header;
 	vaddr_space prog;
-	int ret;
+	int         ret;
 
 	if(argc != 2 || !(in = fopen(argv[1], "r"))) {
-		printf("usage: %s <a.out executable>\n", argv[0]);
-		return 1;
+	    printf("usage: %s <a.out executable>\n", argv[0]);
+	    return 1;
 	}
 
 	fread(&header, 4, 7, in);
 
 	/* XXX */
 	if(alloc_vaddrspace(&prog, &header))
-		ret = 1;
+	    ret = 1;
 
 	fclose(in);
 	free(prog.vspace);
